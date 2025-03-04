@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generateKeypair": "node src/scripts/generateKeypair.js"
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.23",

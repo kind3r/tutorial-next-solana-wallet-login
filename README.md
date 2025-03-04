@@ -177,7 +177,7 @@ The authorization component will be a wrapper component that will be responsible
 
 Before using the authorization flow, we need to setup a few environment variables that will hold the configuration options required:
 - `SOLANA_RPC` - The http(s) RPC endpoint for communicating with the Solana blockchain
-- `LEDGER_AUTH_PK` - A private key we will use to co-sign the authentication transaction for Ledger device users
+- `LEDGER_AUTH_PK` - A base58 encoded private key we will use to co-sign the authentication transaction for Ledger device users. Generate one with `npm run generateKeypair`
 - `SESSION_SECRET` - A 32 byte secret key to sign the JWT token with and also verify the validity of a token. Generate with `openssl rand -base64 32`
 
 Go ahead and put those variables in the `.env.local` file in the root of your project. The file should look like:
