@@ -13,6 +13,15 @@ The Solana blockchain is a high performance and low cost blockchain with a wide 
 
 Let's get started.
 
+- [Intro](#intro)
+- [Create a Next.js project](#create-a-nextjs-project)
+- [Creating sample pages](#creating-sample-pages)
+- [Integrating the wallet connect button](#integrating-the-wallet-connect-button)
+- [The authorization component](#the-authorization-component)
+  - [Creating the nonce and validating the signature](#creating-the-nonce-and-validating-the-signature)
+  - [Creating the session token](#creating-the-session-token)
+- [Validating session in server side calls](#validating-session-in-server-side-calls)
+
 ## Intro
 
 ### Goals
@@ -219,8 +228,37 @@ export default function PrivatePage() {
 
 > Notice that on the `PrivatePage` we require proof of ownership.
 
-No, let's explain what the `Authorization` component has to do.
-On mount or when the wallet context changes, the component will check if the wallet is connected and if proof is required.
+**Now let's explain what the `Authorization` component has to do.**
+
+![Authorization flow](./_assets/authorization-flow.png)
+
+On mount or when the wallet context changes, the component will check if the wallet is connected and if proof is required. 
+
+If the **wallet is not connected** it prompts the user to connect a Solana wallet.
+
+If **proof is not required** then the page contents is displayed.
+
+If **proof is required** the the component first checks if proof already exists by calling [`checkAuthorization`](./solana-login/src/components/Authorization.tsx#L29).
+
+If **proof exists** then the page contents is displayed.
+
+If **proof does not exist** it starts the authorization flow by first displaying a message to the user explaining him he will need to sing a message or if he is using a Ledger device a transaction as they don't support signing messages. When the user clicks the **Login** button we start the [`performAuthorization`](./solana-login/src/components/Authorization.tsx#L44) flow which:
+- fetches the nonce or transaction from the server
+- prompts the user to sign
+- validates the signature server side and creates the session token
+- restarts the [`checkAuthorization`](./solana-login/src/components/Authorization.tsx#L29) which is all is good will display the page contents
+
+### Creating the nonce and validating the signature
+
+> TODO
+
+### Creating the session token
+
+> TODO
+
+## Validating session in server side calls
+
+> TODO
 
 ## TODO
 

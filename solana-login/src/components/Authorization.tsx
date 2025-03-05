@@ -14,9 +14,13 @@ type AuthorizationProps = {
 }
 
 export default function Authorization({ proofRequired, children }: AuthorizationProps) {
+  /** True while checking if authorization exists and is valid */
   const [checkingAuthorization, setCheckingAuthorization] = useState<boolean>(false);
+  /** True if we need to show the authorization message that explains the users he needs to sign a message/transaction */
   const [showAuthorization, setShowAuthorization] = useState<boolean>(false);
+  /** True while performing authorization flow (fetch nonce/transaction, prompt user to sign, verify server side) */
   const [busy, setBusy] = useState<boolean>(false);
+  /** Flag for fetching nonce or transaction */
   const [isUsingLedger, setIsUsingLedger] = useState<boolean>(false);
 
   const wallet = useWallet();
@@ -40,6 +44,7 @@ export default function Authorization({ proofRequired, children }: Authorization
   const performAuthorization = useCallback(async (wallet: WalletContextState, usingLedger: boolean) => {
     setBusy(true);
     if (wallet.connected === true && wallet.publicKey !== null) {
+      // Create a nonce or transaction server side
       const nonce = await createNonce(wallet.publicKey.toBase58(), usingLedger);
 
       let signature: string | undefined;
@@ -65,10 +70,11 @@ export default function Authorization({ proofRequired, children }: Authorization
       }
 
       if (typeof signature !== "undefined") {
+        // validate signature server side and generate a new session token
         await validateAuthorization(wallet.publicKey.toBase58(), usingLedger, signature, blockHash);
       }
 
-      // await sessionCreate(wallet.publicKey?.toBase58() || "");
+      // re-check user session
       await checkAuthorization(wallet);
     }
     setBusy(false);
